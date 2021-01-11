@@ -1,14 +1,5 @@
 # my-gulp-demo
 
-[![Build Status][travis-image]][travis-url]
-[![Package Version][version-image]][version-url]
-[![License][license-image]][license-url]
-[![Dependency Status][dependency-image]][dependency-url]
-[![devDependency Status][devdependency-image]][devdependency-url]
-[![Code Style][style-image]][style-url]
-
-> Always a pleasure scaffolding your awesome static sites.
-
 ## 项目的主要功能及技术  
 该项目使用了gulp及其gulp的相关插件来完成html、js、style、image、fronts等前端项目开发所需要使用的基本项目资源，实现本地实时热更新、项目在浏览器上的代码编译、静态资源压缩与打包，有效提高本地代码开发效率及减少部署上线的项目资源体积。
 
@@ -46,7 +37,8 @@ $ yarn # or npm install
 ```
 
 ## gulpfile项目入口文件及介绍    
-- 通过使用gulp中的src与dest方法将src及public目录下的style、js、image、html、fronts等静态资源通过src方法传入，通过gulp的基本插件，在pipe中对文件进行编译，然后通过dest方法输出到temp文件相应的目录下  
+**文件的输入与输出编译** 
+通过使用gulp中的src与dest方法将src及public目录下的style、js、image、html、fronts等静态资源通过src方法传入，通过gulp的基本插件，在pipe中对文件进行编译，然后通过dest方法输出到temp文件相应的目录下  
 ```
 const {src, dest} = require('gulp')
 const loadPlugins = require('gulp-load-plugins')
@@ -66,7 +58,6 @@ const data = {
     pkg: require('./package.json'),
     date: new Date()
 }
-/** 样式文件编译 */
 /** 样式文件编译 */
 const style = () =>{
     return src('src/assets/styles/*.scss', {base: 'src'})
@@ -109,7 +100,7 @@ const font = () =>{
 ```    
 
 
-- 自动构建服务    
+**自动构建服务**    
 为了是项目在本地开发环境中，能够根据代码的变动实时展示在浏览器上，需要在gulp中增加server方法，该方法通过gulp提供的watch方法来监听本地经常变动文件的变化，变化的文件在被保存后，就会被立即被编译、转化为浏览器可读语言，提高本地开发效率。
 ```
 const browserSync = require('browser-sync')
@@ -149,7 +140,7 @@ const serve = () =>{
 }
 ```
 
-- 文件构建注释删除及压缩    
+**文件构建注释删除及压缩**    
 为了使线上的静态资源体积更小，减少上传时间及加快静态资源请求的时间，需要对本地的静态资源文件中的一些注释代码及空格换行符等进行剔除，使代码的压缩效果达到最好
 ```
 const useref = () =>{
@@ -172,8 +163,8 @@ const useref = () =>{
 }
 ```
 
-- 根据不同场景导出gulp任务     
-clean: 在编译后，对于想要快速删除打包的dist文件可以使用clean任务
+**根据不同场景导出gulp任务**     
+clean: 在编译后，对于想要快速删除打包的dist文件可以使用clean任务  
 parallel与series能够分别对任务进行并行与串行，从而提高打包效率  
 develop：在开发阶段，将变化频繁的文件进行编译并且实时监听
 build：我们将文件变化比较不频繁并且内部不需要过多的压缩的image和fronts在生产阶段即项目上线前再进行编译，在编译上线的代码时，在开发阶段时已经实时编译dist文件，为了防止文件被覆盖或重叠，确保线上的代码的正确编译，现将本地代码编译后，全部放至temp目录下，在build的时候，直接读取temp下已经编译过的文件进行压缩，最后放到dist文件下，大大提高本地打包速度
@@ -197,9 +188,11 @@ const build = series(
     font
   )
 ) 
-
-
-
+module.exports = {
+    clean,
+    build,
+    develop
+}
 ```
 
 ## 项目的基本命令脚本
